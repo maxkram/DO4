@@ -1,0 +1,56 @@
+name: Bash Lint Check
+
+on:
+  push:
+    branches: [ main, develop, feature/* ]
+    paths:
+      - 'src/**/*.sh'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'src/**/*.sh'
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-20.04
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Install shellcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+      
+      - name: Run shellcheck on all scripts
+        run: |
+          echo "🔍 Running ShellCheck on Bash scripts..."
+          FAILED=0
+          
+          find src -name "*.sh" -type f | while read script; do
+              echo "Checking: $script"
+              if ! shellcheck "$script"; then
+                  FAILED=1
+              fi
+          done
+          
+          if [ $FAILED -eq 1 ]; then
+              exit 1
+          fi
+          
+          echo "✅ All scripts passed ShellCheck"
+      
+      - name: Check for common issues
+        run: |
+          echo "🔎 Checking for common issues..."
+          
+          # Check for TODO comments
+          if grep -r "TODO\|FIXME" src --include="*.sh"; then
+              echo "⚠️  Found TODO/FIXME comments"
+          fi
+          
+          # Check for debug statements
+          if grep -r "set -x\|debug" src --include="*.sh"; then
+              echo "⚠️  Found debug statements"
+          fi

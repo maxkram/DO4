@@ -1,0 +1,40 @@
+# Logs
+*.log
+*.log.*
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Test outputs
+test_output/
+tmp/
+temp/
+/src/*/test_output/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Shell
+.shellcheckrc
+
+# Lock files
+*.lock
+
+# Build
+build/
+dist/
+*.o
+*.a
+*.so
